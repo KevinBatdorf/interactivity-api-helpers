@@ -1,8 +1,13 @@
 {
+  "landingPage": "/",
   "steps": [
     {
       "step": "mkdir",
-      "path": "/wordpress/wp-content/plugins/iapih"
+      "path": "/wordpress/wp-content/plugins/iapih/"
+    },
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/plugins/iapih/build"
     },
     {
       "step": "writeFile",
@@ -37,7 +42,7 @@
     {
       "step": "writeFile",
       "path": "/wordpress/wp-content/plugins/iapih/iapih.php",
-      "data": "<?php\n/**\n * Plugin Name:       iapih\n */\nadd_action('init', fn () => register_block_type(__DIR__));\n"
+      "data": "<?php\n/**\n * Plugin Name:       iapih\n */\nadd_action('init', function () { register_block_type(__DIR__); });\n"
     },
     {
       "step": "writeFile",
@@ -47,7 +52,11 @@
     {
       "step": "activatePlugin",
       "pluginName": "iapih",
-      "pluginPath": "/wordpress/wp-content/plugins/iapih"
+      "pluginPath": "/wordpress/wp-content/plugins/iapih/"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire '/wordpress/wp-load.php';\n$id = wp_insert_post([\n\t\t'post_title' => 'Test Page',\n\t\t'post_content' => '<!-- wp:iapih/iapih -->\n<div data-wp-interactive=\"interval\"\n\t\tdata-wp-context=\"{ &quot;count&quot;: 0 }\"\n\t\tdata-wp-init=\"init\">\n\t\t<p data-wp-text=\"context.count\"></p>\n\t</div>\n<!-- /wp:iapih/iapih -->',\n\t\t'post_status' => 'publish',\n\t\t'post_author' => 1\n]);\nupdate_option('page_on_front', $id);\nupdate_option('show_on_front', 'page');"
     }
   ]
 }
