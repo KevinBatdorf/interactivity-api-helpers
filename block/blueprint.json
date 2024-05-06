@@ -1,18 +1,53 @@
 {
-	"steps": [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/plugins/iapih"
-		},
-		{
-			"step": "writeFile",
-			"path": "/wordpress/wp-content/plugins/iapih",
-			"data": "<?php echo 'Hello World!'; ?>"
-		},
-		{
-			"step": "activatePlugin",
-			"pluginName": "iapih",
-			"pluginPath": "/wordpress/wp-content/plugins/iapih"
-		}
-	]
+  "steps": [
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/plugins/iapih"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/plugins/iapih/block.asset.php",
+      "data": "<?php return ['dependencies' => ['interactivity'], 'version' => '12345'];\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/plugins/iapih/block.js",
+      "data": "(function (blocks) {\n\tblocks.registerBlockType('iapih/iapih');\n})(window.wp.blocks);\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/plugins/iapih/block.json",
+      "data": "{\n\t\"apiVersion\": 3,\n\t\"title\": \"iapih\",\n\t\"name\": \"iapih/iapih\",\n\t\"editorScript\": \"file:./block.js\",\n\t\"viewScriptModule\": \"file:./build/demo.js\"\n}\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/plugins/iapih/build/demo.js",
+      "data": "import { store as e, getContext as n } from \"@wordpress/interactivity\";\nimport { i } from \"./interval-AdspQ3Ix.js\";\nconst r = e(\"interval\", {\n  init() {\n    i(({ cancel: o }) => {\n      const t = n();\n      t.count = Number(t.count) + 1, t.count === 3 && o();\n    }, 1e3);\n  }\n}), m = { intervalDemo: r };\nexport {\n  m as default\n};\n//# sourceMappingURL=demo.js.map\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/plugins/iapih/build/index.js",
+      "data": "import { i as e } from \"./interval-AdspQ3Ix.js\";\nexport {\n  e as interval\n};\n//# sourceMappingURL=index.js.map\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/plugins/iapih/build/interval-AdspQ3Ix.js",
+      "data": "import { withScope as w } from \"@wordpress/interactivity\";\nconst p = (a, t, o = {}) => {\n  const e = Object.assign(\n    { useTimeout: !1, precise: !0 },\n    o\n  );\n  if (e.useTimeout) {\n    m({ callback: a, interval: t, settings: e });\n    return;\n  }\n  u({ callback: a, interval: t, settings: e });\n}, u = ({ callback: a, interval: t, settings: o }) => {\n  let e = 0, i = !1, l = 0, r = 0;\n  const s = w((n) => {\n    e || (e = n);\n    const c = n - e;\n    c > t && (r += c - // precise will account for animationframe variance\n    (o != null && o.precise ? c - t : 0), e = n, a({\n      elapsed: r,\n      cancel: () => {\n        i = !0, window.cancelAnimationFrame(l);\n      }\n    })), l = i ? 0 : window.requestAnimationFrame(s);\n  });\n  l = window.requestAnimationFrame(s);\n}, m = ({ callback: a, interval: t, settings: o }) => {\n  let e = Date.now(), i = 0, l = !1, r = 0;\n  const s = w(() => {\n    const n = Date.now(), c = n - e, d = o != null && o.precise ? c - t : 0;\n    r += c - d, e = n, a({\n      cancel: () => {\n        l = !0, window.clearTimeout(i);\n      },\n      elapsed: r\n    }), l || (i = window.setTimeout(s, t - d));\n  });\n  i = window.setTimeout(s, t);\n};\nexport {\n  p as i\n};\n//# sourceMappingURL=interval-AdspQ3Ix.js.map\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/plugins/iapih/iapih.php",
+      "data": "<?php\n/**\n * Plugin Name:       iapih\n */\nadd_action('init', fn () => register_block_type(__DIR__));\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/plugins/iapih/view.ts",
+      "data": "import intervalDemo from '../src/interval.demo.ts';\n\nexport default { intervalDemo };\n"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginName": "iapih",
+      "pluginPath": "/wordpress/wp-content/plugins/iapih"
+    }
+  ]
 }
