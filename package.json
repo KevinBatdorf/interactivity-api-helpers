@@ -24,11 +24,11 @@
 	"scripts": {
 		"dev": "vite build --watch",
 		"start": "vite --host --open",
-		"build": "vite build",
+		"build": "vite build && rm -rf ./block/build && mkdir -p ./block/build && cp -R ./dist/* ./block/build && node ./block/blueprint-builder.js",
 		"build:types": "dts-bundle-generator --config ./dts-bundle-generator.config.ts",
 		"eslint": "eslint ./src --ext .ts",
 		"test": "vitest",
-		"e2e": "npm run build && mkdir -p ./block/build && cp -R ./dist/* ./block/build && node ./block/blueprint-builder.js"
+		"e2e": "npm run build"
 	},
 	"peerDependencies": {
 		"@wordpress/interactivity": "^5.6.0"

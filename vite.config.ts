@@ -18,6 +18,7 @@ export default defineConfig({
 	},
 	build: {
 		sourcemap: true,
+		minify: 'esbuild',
 		lib: {
 			entry: path.resolve(__dirname, 'src/index.ts'),
 			name: 'interactivity-api-helpers',
