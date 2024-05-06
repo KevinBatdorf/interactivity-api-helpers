@@ -1,0 +1,25 @@
+{
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint", "prettier", "no-only-tests"],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier"
+	],
+	"ignorePatterns": ["dist/", "node_modules/"],
+	"env": {
+		"browser": true
+	},
+	"rules": {
+		"prettier/prettier": "error",
+		"require-await": "error",
+		"no-only-tests/no-only-tests": "warn",
+		"@typescript-eslint/no-unused-vars": [
+			"error",
+			{
+				"argsIgnorePattern": "^_"
+			}
+		]
+	}
+}

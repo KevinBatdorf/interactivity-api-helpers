@@ -1,0 +1,18 @@
+{
+	"steps": [
+		{
+			"step": "mkdir",
+			"path": "/wordpress/wp-content/plugins/iapih"
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/plugins/iapih",
+			"data": "<?php echo 'Hello World!'; ?>"
+		},
+		{
+			"step": "activatePlugin",
+			"pluginName": "iapih",
+			"pluginPath": "/wordpress/wp-content/plugins/iapih"
+		}
+	]
+}

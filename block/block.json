@@ -1,0 +1,7 @@
+{
+	"apiVersion": 3,
+	"title": "iapih",
+	"name": "iapih/iapih",
+	"editorScript": "file:./block.js",
+	"viewScriptModule": "file:./build/demo.js"
+}
