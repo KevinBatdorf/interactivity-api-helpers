@@ -1,0 +1,19 @@
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Test page</title>
+	</head>
+	<body style="padding: 1rem">
+		<h1>Test page</h1>
+		<div style="max-width: 600px; margin: 1rem 0">
+			<div id="interval-demo"></div>
+		</div>
+		<script type="module">
+			import interval, { html as intervalHtml } from "./src/interval.demo.ts";
+
+			document.getElementById("interval-demo").innerHTML = intervalHtml;
+		</script>
+	</body>
+</html>

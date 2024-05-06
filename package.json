@@ -23,12 +23,12 @@
 	],
 	"scripts": {
 		"dev": "vite build --watch",
-		"start": "vite --host",
+		"start": "vite --host --open",
 		"build": "vite build",
 		"build:types": "dts-bundle-generator --config ./dts-bundle-generator.config.ts",
 		"eslint": "eslint ./src --ext .ts",
 		"test": "vitest",
-		"e2e": "npm run build && mkdir -p ./block/build && cp -R ./dist/* ./block/build"
+		"e2e": "npm run build && mkdir -p ./block/build && cp -R ./dist/* ./block/build && node ./block/blueprint-builder.js"
 	},
 	"peerDependencies": {
 		"@wordpress/interactivity": "^5.6.0"

@@ -48,7 +48,7 @@ const intervalRaf = ({ callback, interval, settings }: IntervalArgs) => {
 		if (elapsedTime > interval) {
 			totalElapsedTime +=
 				elapsedTime -
-				// precise will account for animationframe variance
+				// precise will normalize to match the interval
 				(settings?.precise ? elapsedTime - interval : 0);
 			start = timestamp;
 

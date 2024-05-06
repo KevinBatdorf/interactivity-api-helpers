@@ -34,7 +34,7 @@ describe('requestAnimationFrame', () => {
 		let lastTime = 0;
 		window.performance = {
 			...window.performance,
-			now: vi.fn(() => (lastTime += 16.67)),
+			now: vi.fn(() => (lastTime += 16.67)), // 60fps
 		};
 		window.requestAnimationFrame = vi.fn((cb) => {
 			setTimeout(() => cb(performance.now()), 0);
