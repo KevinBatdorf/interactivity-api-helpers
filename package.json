@@ -25,34 +25,29 @@
 		"dev": "vite build --watch",
 		"start": "vite --host --open",
 		"build": "vite build && rm -rf ./block/build && mkdir -p ./block/build && cp -R ./dist/* ./block/build && node ./block/blueprint-builder.js",
-		"build:types": "dts-bundle-generator --config ./dts-bundle-generator.config.ts",
-		"eslint": "eslint ./src --ext .ts",
-		"test": "vitest",
-		"e2e": "npm run build"
+		"lint": "eslint ./src --ext .ts --max-warnings 0",
+		"format": "prettier --write .",
+		"test": "vitest"
 	},
 	"peerDependencies": {
 		"@wordpress/interactivity": "^5.6.0"
 	},
 	"devDependencies": {
 		"@babel/runtime": "^7.24.5",
-		"@playwright/test": "^1.43.1",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
-		"@types/node": "^20.12.8",
 		"@typescript-eslint/eslint-plugin": "^7.8.0",
 		"@typescript-eslint/parser": "^7.8.0",
-		"dts-bundle-generator": "^9.5.1",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-no-only-tests": "^3.1.0",
 		"eslint-plugin-prettier": "^5.1.3",
-		"happy-dom": "^14.7.1",
-		"html-entities": "^2.5.2",
+		"happy-dom": "^14.10.1",
 		"micromatch": "^4.0.5",
 		"prettier": "^3.2.5",
 		"tslib": "^2.6.2",
 		"typescript": "^5.4.5",
 		"vite": "^5.2.11",
-		"vite-plugin-dts": "^3.9.0",
+		"vite-plugin-dts": "^3.9.1",
 		"vitest": "^1.6.0"
 	}
 }

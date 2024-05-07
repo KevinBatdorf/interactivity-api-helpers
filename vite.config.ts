@@ -9,12 +9,6 @@ export default defineConfig({
 	test: {
 		includeSource: ['src/**/*.{js,ts}'],
 		environment: 'happy-dom',
-		browser: {
-			name: 'chrome',
-			enabled: true,
-			headless: true,
-			provider: 'playwright',
-		},
 	},
 	build: {
 		sourcemap: true,
