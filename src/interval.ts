@@ -14,15 +14,15 @@ import { withScope } from '@wordpress/interactivity';
  * @example
  * interval(({ cancel, elapsed }) => {
  *   console.log(`Elapsed time: ${elapsed}`);
- *   if (elapsed > 5000) {  // After 5 seconds
+ *   if (elapsed >= 5000) {  // After 5 seconds
  *     cancel();  // Stop the interval
  *   }
  * }, 1000, { useTimeout: true, precise: true });
  */
 export const interval = (
-	callback: IntervalArgs['callback'],
-	interval: IntervalArgs['interval'],
-	settings: IntervalArgs['settings'] = {},
+	callback: (args: CallbackArgs) => void,
+	interval: number,
+	settings: Settings,
 ) => {
 	const settingsWithDefaults = Object.assign(
 		{ useTimeout: false, precise: true },
@@ -100,9 +100,4 @@ type CallbackArgs = {
 type Settings = {
 	useTimeout?: boolean;
 	precise?: boolean;
-};
-type IntervalArgs = {
-	callback: (args: CallbackArgs) => void;
-	interval: number;
-	settings: Settings;
 };

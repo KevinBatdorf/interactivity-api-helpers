@@ -1,0 +1,35 @@
+name: Process and test
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+
+      - name: Install dependencies, build, format
+        run: |
+          npm ci
+          npm run format
+          npm run build
+        env:
+          CI: true
+
+      - name: Commit and push if files have changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: lint and format and process blueprint'
+          commit_options: '--no-verify'
+          commit_user_name: 'GitHub Actions'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_author: 'GitHub Actions <github-actions[bot]@users.noreply.github.com>'
+
+      - name: Lint and build
+        run: |
+          npm run lint
+          npm run build
+          npm run test
+        env:
+          CI: true
