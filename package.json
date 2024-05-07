@@ -4,7 +4,10 @@
 	"description": "Helper library for building with the WordPress Interactivity API",
 	"author": "Kevin Batdorf",
 	"homepage": "https://github.com/KevinBatdorf/interactivity-api-helpers",
-	"repository": "github:KevinBatdorf/interactivity-api-helpers",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/KevinBatdorf/interactivity-api-helpers.git"
+	},
 	"license": "MIT",
 	"keywords": [
 		"interactivity api",
