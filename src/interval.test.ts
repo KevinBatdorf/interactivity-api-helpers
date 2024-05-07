@@ -73,7 +73,6 @@ describe('requestAnimationFrame', () => {
 		const mock = vi.fn(({ elapsed: e }) => (elapsed = e));
 		interval(mock, 1000);
 		vi.advanceTimersByTime(1000 / 16.67); // ~ 999ms
-		console.log('elapsed', elapsed);
 		expect(mock).toHaveBeenCalledTimes(0);
 		vi.advanceTimersByTime(16.67);
 		expect(mock).toHaveBeenCalledTimes(1);
