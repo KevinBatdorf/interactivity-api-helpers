@@ -15,7 +15,7 @@ jobs:
       - name: Check package version matches release
         run: |
           PKG_VERSION=$(node -p "require('./package.json').version")
-          RELEASE_VERSION=${GITHUB_REF#refs/tags/v}
+          RELEASE_VERSION=${{ github.event.release.tag_name }}
           if [[ "v$PKG_VERSION" != "$RELEASE_VERSION" ]]; then exit 1; fi
       - name: Install dependencies, build, lint, and test
         run: |
