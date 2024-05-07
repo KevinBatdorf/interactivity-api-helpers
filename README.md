@@ -29,6 +29,9 @@ The function provided to `interval` will receive an object with the following pr
 - `cancel`: A function that can be called to cancel the interval.
 - `elapsed`: The number of milliseconds that have elapsed since the interval was started.
 
+Returns a function that can be called to cancel the interval.
+
+#### Example
 ```html
 <div
   data-wp-interactive="interval"
@@ -41,7 +44,7 @@ The function provided to `interval` will receive an object with the following pr
 ```js
 store('interval', {
   init() {
-    interval(({ cancel, elapsed }) => {
+    const clearFn = interval(({ cancel, elapsed }) => {
       const context = getContext();
       const cur = context.count ?? 0;
       context.count = Number(cur) + 1;
