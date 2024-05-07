@@ -32,6 +32,7 @@ The function provided to `interval` will receive an object with the following pr
 Returns a function that can be called to cancel the interval.
 
 #### Example
+
 ```html
 <div
   data-wp-interactive="interval"
