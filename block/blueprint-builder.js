@@ -31,7 +31,7 @@ async function readBlueprint(jsonFilePath) {
 
 async function writeBlueprint(blueprint, jsonFilePath) {
 	const jsonContent = JSON.stringify(blueprint, null, '\t');
-	await writeFile(jsonFilePath, jsonContent);
+	await writeFile(jsonFilePath, jsonContent + '\n');
 }
 
 async function getFilesInDirectory(dirPath) {

@@ -9,6 +9,7 @@ export default defineConfig({
 	test: {
 		includeSource: ['src/**/*.{js,ts}'],
 		environment: 'happy-dom',
+		reporters: process.env.GITHUB_ACTIONS ? ['dot', 'github-actions'] : ['dot'],
 	},
 	build: {
 		sourcemap: true,
