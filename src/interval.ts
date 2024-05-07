@@ -11,6 +11,8 @@ import { withScope } from '@wordpress/interactivity';
  * @param settings.useTimeout If true, use setTimeout instead of requestAnimationFrame.
  * @param settings.precise If true, will attempt to run the interval at the exact interval time.
  *
+ * @returns A function that can be called to cancel the interval.
+ *
  * @example
  * interval(({ cancel, elapsed }) => {
  *   console.log(`Elapsed time: ${elapsed}`);
@@ -23,19 +25,26 @@ export const interval = (
 	callback: (args: CallbackArgs) => void,
 	interval: number,
 	settings: Settings = {},
-) => {
+): CancelIntervalFn => {
 	const settingsWithDefaults = Object.assign(
 		{ useTimeout: false, precise: true },
 		settings,
 	);
 	if (settingsWithDefaults.useTimeout) {
-		intervalTimeout({ callback, interval, settings: settingsWithDefaults });
-		return;
+		return intervalTimeout({
+			callback,
+			interval,
+			settings: settingsWithDefaults,
+		});
 	}
-	intervalRaf({ callback, interval, settings: settingsWithDefaults });
+	return intervalRaf({ callback, interval, settings: settingsWithDefaults });
 };
 
-const intervalRaf = ({ callback, interval, settings }: IntervalArgs) => {
+const intervalRaf = ({
+	callback,
+	interval,
+	settings,
+}: IntervalArgs): CancelIntervalFn => {
 	let start: number = 0;
 	let cancelled = false;
 	let id = 0;
@@ -62,11 +71,18 @@ const intervalRaf = ({ callback, interval, settings }: IntervalArgs) => {
 		}
 		id = cancelled ? 0 : window.requestAnimationFrame(update);
 	});
-
 	id = window.requestAnimationFrame(update);
+	return () => {
+		cancelled = true;
+		window.cancelAnimationFrame(id);
+	};
 };
 
-const intervalTimeout = ({ callback, interval, settings }: IntervalArgs) => {
+const intervalTimeout = ({
+	callback,
+	interval,
+	settings,
+}: IntervalArgs): CancelIntervalFn => {
 	let start = Date.now();
 	let id: number = 0;
 	let cancelled = false;
@@ -91,6 +107,10 @@ const intervalTimeout = ({ callback, interval, settings }: IntervalArgs) => {
 	});
 
 	id = window.setTimeout(handle, interval);
+	return () => {
+		cancelled = true;
+		window.clearTimeout(id);
+	};
 };
 
 type CallbackArgs = {
@@ -106,3 +126,4 @@ type IntervalArgs = {
 	interval: number;
 	settings?: Settings;
 };
+type CancelIntervalFn = () => void;

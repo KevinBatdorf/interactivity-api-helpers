@@ -7,6 +7,7 @@ describe('setTimeout', () => {
 	});
 	afterEach(() => {
 		vi.restoreAllMocks();
+		vi.useRealTimers();
 	});
 	it('should run every second', () => {
 		let elapsed = 0;
@@ -27,11 +28,31 @@ describe('setTimeout', () => {
 		vi.advanceTimersToNextTimer();
 		expect(mock).toHaveBeenCalledTimes(1);
 	});
+	it('should be able to cancel using return function', () => {
+		const mock = vi.fn((c) => console.log(c));
+		const cancel = interval(mock, 1000, { useTimeout: true });
+		expect(mock).toHaveBeenCalledTimes(0);
+		vi.advanceTimersByTime(1000);
+		expect(mock).toHaveBeenCalledTimes(1);
+		cancel();
+		vi.advanceTimersByTime(2000);
+		expect(mock).toHaveBeenCalledTimes(1);
+	});
 });
 
 describe('requestAnimationFrame', () => {
 	beforeEach(() => {
 		let lastTime = 0;
+		vi.useFakeTimers({
+			toFake: [
+				'setTimeout',
+				'clearTimeout',
+				'Date',
+				'requestAnimationFrame',
+				'cancelAnimationFrame',
+				'performance',
+			],
+		});
 		window.performance = {
 			...window.performance,
 			now: vi.fn(() => (lastTime += 16.67)), // 60fps
@@ -41,12 +62,10 @@ describe('requestAnimationFrame', () => {
 			return Math.random(); // mock a random id
 		});
 		window.cancelAnimationFrame = vi.fn(clearTimeout);
-		vi.useFakeTimers({
-			toFake: ['requestAnimationFrame', 'cancelAnimationFrame', 'Date'],
-		});
 	});
 	afterEach(() => {
 		vi.restoreAllMocks();
+		vi.useRealTimers();
 	});
 	it('should run using raf', () => {
 		let elapsed = 0;
@@ -67,6 +86,16 @@ describe('requestAnimationFrame', () => {
 		vi.advanceTimersByTime(1001 / 16.67); // ~ 1016ms
 		expect(mock).toHaveBeenCalledTimes(1);
 		vi.advanceTimersByTime(1001 / 16.67);
+		expect(mock).toHaveBeenCalledTimes(1);
+	});
+	it('should be able to cancel using raf and return function', () => {
+		const mock = vi.fn((c) => console.log(c));
+		const cancel = interval(mock, 1000);
+		expect(mock).toHaveBeenCalledTimes(0);
+		vi.advanceTimersByTime(1001 / 16.67); // ~ 1016ms
+		expect(mock).toHaveBeenCalledTimes(1);
+		cancel();
+		vi.advanceTimersByTime(1001 / 16.67); // ~ 1016ms
 		expect(mock).toHaveBeenCalledTimes(1);
 	});
 });
