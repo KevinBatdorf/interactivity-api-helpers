@@ -14,5 +14,12 @@ export default {
 				singleQuote: false,
 			},
 		},
+		{
+			files: ['*.md'],
+			options: {
+				useTabs: false,
+				tabWidth: 4,
+			},
+		},
 	],
 };
