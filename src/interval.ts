@@ -22,7 +22,7 @@ import { withScope } from '@wordpress/interactivity';
 export const interval = (
 	callback: (args: CallbackArgs) => void,
 	interval: number,
-	settings: Settings,
+	settings: Settings = {},
 ) => {
 	const settingsWithDefaults = Object.assign(
 		{ useTimeout: false, precise: true },
@@ -100,4 +100,9 @@ type CallbackArgs = {
 type Settings = {
 	useTimeout?: boolean;
 	precise?: boolean;
+};
+type IntervalArgs = {
+	callback: (args: CallbackArgs) => void;
+	interval: number;
+	settings?: Settings;
 };
