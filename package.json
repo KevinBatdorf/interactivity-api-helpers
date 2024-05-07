@@ -24,7 +24,7 @@
 	"scripts": {
 		"dev": "vite build --watch",
 		"start": "vite --host --open",
-		"build": "vite build && rm -rf ./block/build && mkdir -p ./block/build && cp -R ./dist/* ./block/build && node ./block/blueprint-builder.js",
+		"build": "tsc && vite build && rm -rf ./block/build && mkdir -p ./block/build && cp -R ./dist/* ./block/build && node ./block/blueprint-builder.js",
 		"lint": "eslint ./src --ext .ts --max-warnings 0",
 		"format": "prettier --write . && eslint --fix ./src --ext .ts",
 		"test": "vitest"

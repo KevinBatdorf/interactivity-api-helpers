@@ -34,10 +34,15 @@ jobs:
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_author: 'GitHub Actions <github-actions[bot]@users.noreply.github.com>'
 
-      - name: Lint, build, and test
-        run: |
-          npm run lint
-          npm run build
-          npm run test
+      - name: Lint
+        run: npm run lint
+        env:
+          CI: true
+      - name: Build
+        run: npm run build
+        env:
+          CI: true
+      - name: Test
+        run: npm run test
         env:
           CI: true
