@@ -6,6 +6,9 @@ on:
 jobs:
   process:
     runs-on: ubuntu-latest
+    concurrency:
+      group: cypress - ${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
       # added or changed files to the repository.
