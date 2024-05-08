@@ -54,9 +54,10 @@ const intervalRaf = ({
 	const update = withScope((now: DOMHighResTimeStamp) => {
 		if (!previous) previous = now;
 		const delta = now - previous;
-		const offset = settings?.precise ? totalElapsedTime % interval : 0;
+		// Account for any variance in time between invocations
+		const drift = settings?.precise ? delta - interval : 0;
 
-		if (delta >= interval - offset) {
+		if (delta >= interval - drift) {
 			previous = now;
 			totalElapsedTime += delta;
 			iteration++;
@@ -96,7 +97,7 @@ const intervalTimeout = ({
 		const delta = now - previous;
 		previous = now;
 		totalElapsedTime += delta;
-		const offset = settings?.precise ? totalElapsedTime % interval : 0;
+		const drift = settings?.precise ? totalElapsedTime % interval : 0;
 		iteration++;
 
 		callback({
@@ -107,7 +108,7 @@ const intervalTimeout = ({
 			elapsed: totalElapsedTime,
 			iteration,
 		});
-		if (!cancelled) id = window.setTimeout(handle, interval - offset);
+		if (!cancelled) id = window.setTimeout(handle, interval - drift);
 	});
 
 	id = window.setTimeout(handle, interval);
