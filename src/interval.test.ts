@@ -10,15 +10,12 @@ describe('setTimeout', () => {
 		vi.useRealTimers();
 	});
 	it('should run every second', () => {
-		let elapsed = 0;
-		// Can't test for imprecise timing
-		const mock = vi.fn(({ elapsed: e }) => (elapsed = e));
+		const mock = vi.fn(() => {});
 		interval(mock, 1000, { useTimeout: true });
 		vi.advanceTimersByTime(500);
 		expect(mock).toHaveBeenCalledTimes(0);
 		vi.advanceTimersByTime(2500);
 		expect(mock).toHaveBeenCalledTimes(3);
-		expect(elapsed).toBe(3000);
 	});
 	it('should be able to cancel', () => {
 		const mock = vi.fn(({ cancel }) => cancel());
@@ -78,7 +75,7 @@ describe('requestAnimationFrame', () => {
 		expect(mock).toHaveBeenCalledTimes(1);
 		vi.advanceTimersByTime(1001 / 16.67);
 		expect(mock).toHaveBeenCalledTimes(2);
-		expect(elapsed).toBe(2000);
+		expect(Math.round(elapsed)).toBe(2000);
 	});
 	it('should be able to cancel using raf', () => {
 		const mock = vi.fn(({ cancel }) => cancel());

@@ -11,10 +11,10 @@ import { withScope } from '@wordpress/interactivity';
  * @param settings.useTimeout If true, use setTimeout instead of requestAnimationFrame.
  * @param settings.precise If true, will attempt to run the interval at the exact interval time.
  *
- * @returns A function that can be called to cancel the interval.
+ * @returns A function that can be called to cancel the interval from outside the interval callback.
  *
  * @example
- * interval(({ cancel, elapsed }) => {
+ * const clearFn = interval(({ cancel, elapsed, iterations }) => {
  *   console.log(`Elapsed time: ${elapsed}`);
  *   if (elapsed >= 5000) {  // After 5 seconds
  *     cancel();  // Stop the interval
@@ -45,30 +45,32 @@ const intervalRaf = ({
 	interval,
 	settings,
 }: IntervalArgs): CancelIntervalFn => {
-	let start: number = 0;
+	let previous: number = 0;
 	let cancelled = false;
 	let id = 0;
 	let totalElapsedTime = 0;
+	let iteration = 0;
 
-	const update = withScope((timestamp: DOMHighResTimeStamp) => {
-		if (!start) start = timestamp;
-		const elapsedTime = timestamp - start;
+	const update = withScope((now: DOMHighResTimeStamp) => {
+		if (!previous) previous = now;
+		const delta = now - previous;
+		const offset = settings?.precise ? totalElapsedTime % interval : 0;
 
-		if (elapsedTime > interval) {
-			totalElapsedTime +=
-				elapsedTime -
-				// precise will normalize to match the interval
-				(settings?.precise ? elapsedTime - interval : 0);
-			start = timestamp;
+		if (delta >= interval - offset) {
+			previous = now;
+			totalElapsedTime += delta;
+			iteration++;
 
 			callback({
-				elapsed: totalElapsedTime,
 				cancel: () => {
 					cancelled = true;
 					window.cancelAnimationFrame(id);
 				},
+				elapsed: totalElapsedTime,
+				iteration,
 			});
 		}
+
 		id = cancelled ? 0 : window.requestAnimationFrame(update);
 	});
 	id = window.requestAnimationFrame(update);
@@ -83,17 +85,19 @@ const intervalTimeout = ({
 	interval,
 	settings,
 }: IntervalArgs): CancelIntervalFn => {
-	let start = Date.now();
+	let previous = performance.now();
 	let id: number = 0;
 	let cancelled = false;
 	let totalElapsedTime = 0;
+	let iteration = 0;
 
 	const handle = withScope(() => {
-		const now = Date.now();
-		const elapsedTime = now - start;
-		const maybeOverflow = settings?.precise ? elapsedTime - interval : 0;
-		totalElapsedTime += elapsedTime - maybeOverflow;
-		start = now;
+		const now = performance.now();
+		const delta = now - previous;
+		previous = now;
+		totalElapsedTime += delta;
+		const offset = settings?.precise ? totalElapsedTime % interval : 0;
+		iteration++;
 
 		callback({
 			cancel: () => {
@@ -101,9 +105,9 @@ const intervalTimeout = ({
 				window.clearTimeout(id);
 			},
 			elapsed: totalElapsedTime,
+			iteration,
 		});
-
-		if (!cancelled) id = window.setTimeout(handle, interval - maybeOverflow);
+		if (!cancelled) id = window.setTimeout(handle, interval - offset);
 	});
 
 	id = window.setTimeout(handle, interval);
@@ -116,6 +120,7 @@ const intervalTimeout = ({
 type CallbackArgs = {
 	cancel: () => void;
 	elapsed: number;
+	iteration: number;
 };
 type Settings = {
 	useTimeout?: boolean;
