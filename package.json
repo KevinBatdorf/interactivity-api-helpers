@@ -1,6 +1,6 @@
 {
 	"name": "interactivity-api-helpers",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Helper library for building with the WordPress Interactivity API",
 	"author": "Kevin Batdorf",
 	"homepage": "https://github.com/KevinBatdorf/interactivity-api-helpers",
