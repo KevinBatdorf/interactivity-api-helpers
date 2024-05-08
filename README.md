@@ -28,6 +28,7 @@ The function provided to `interval` will receive an object with the following pr
 
 - `cancel`: A function that can be called to cancel the interval.
 - `elapsed`: The number of milliseconds that have elapsed since the interval was started.
+- `iteration`: The number of times the interval has been called.
 
 Returns a function that can be called to cancel the interval.
 
@@ -45,12 +46,10 @@ Returns a function that can be called to cancel the interval.
 ```js
 store('interval', {
   init() {
-    const clearFn = interval(({ cancel, elapsed }) => {
+    const clearFn = interval(({ iteration, cancel, elapsed }) => {
       const context = getContext();
-      const cur = context.count ?? 0;
-      context.count = Number(cur) + 1;
-
-      if (elapsed >= 5000) cancel();
+      context.count = iteration
+      if (iteration === 4) cancel();
     }, 1000);
   },
 });
