@@ -48,7 +48,7 @@ store('interval', {
   init() {
     const clearFn = interval(({ iteration, cancel, elapsed }) => {
       const context = getContext();
-      context.count = iteration
+      context.count = iteration;
       if (iteration === 4) cancel();
     }, 1000);
   },
