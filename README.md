@@ -44,6 +44,9 @@ Returns a function that can be called to cancel the interval.
 ```
 
 ```js
+import { store, getContext } from '@wordpress/interactivity';
+import { interval } from 'interactivity-api-helpers';
+
 store('interval', {
   init() {
     const clearFn = interval(({ iteration, cancel, elapsed }) => {
