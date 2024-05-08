@@ -23,30 +23,39 @@ export default store('interval', {
 		},
 	},
 	init() {
-		interval(({ cancel, elapsed }) => {
+		interval(({ cancel, elapsed, iteration }) => {
 			const context = getContext<{
-				defaults: { count: number; elapsed: number; cancelled: boolean };
+				defaults: {
+					randomNumber: number;
+					count: number;
+					elapsed: number;
+					cancelled: boolean;
+				};
 			}>();
-			const cur = context.defaults?.count ?? 0;
-			context.defaults = { count: Number(cur) + 1, elapsed, cancelled: false };
-			if (context.defaults.count === 5) {
+			context.defaults = {
+				randomNumber: Math.random(),
+				count: iteration,
+				elapsed,
+				cancelled: false,
+			};
+			if (iteration >= 5) {
 				context.defaults.cancelled = true;
 				cancel();
 			}
 		}, 1000);
 
 		interval(
-			({ cancel, elapsed }) => {
+			({ cancel, elapsed, iteration }) => {
 				const context = getContext<{
-					imprecise: { count: number; elapsed: number; cancelled: boolean };
+					imprecise: ContextType;
 				}>();
-				const cur = context.imprecise?.count ?? 0;
 				context.imprecise = {
-					count: Number(cur) + 1,
+					randomNumber: Math.random(),
+					count: iteration,
 					elapsed,
 					cancelled: false,
 				};
-				if (context.imprecise.count === 5) {
+				if (iteration >= 5) {
 					context.imprecise.cancelled = true;
 					cancel();
 				}
@@ -54,48 +63,46 @@ export default store('interval', {
 			1000,
 			{ precise: false },
 		);
-		interval(
-			({ cancel, elapsed }) => {
+
+		const clear = interval(
+			({ elapsed, iteration }) => {
 				const context = getContext<{
-					timerDefaults: { count: number; elapsed: number; cancelled: boolean };
+					timerDefaults: ContextType;
 				}>();
-				const cur = context.timerDefaults?.count ?? 0;
 				context.timerDefaults = {
-					count: Number(cur) + 1,
+					randomNumber: Math.random(),
+					count: iteration,
 					elapsed,
 					cancelled: false,
 				};
-				if (context.timerDefaults.count === 5) {
-					context.timerDefaults.cancelled = true;
-					cancel();
-				}
 			},
 			1000,
 			{ useTimeout: true },
 		);
+		setTimeout(clear, 5001);
 
-		interval(
-			({ cancel, elapsed }) => {
+		const clear2 = interval(
+			({ elapsed, iteration }) => {
 				const context = getContext<{
-					timerImprecise: {
-						count: number;
-						elapsed: number;
-						cancelled: boolean;
-					};
+					timerImprecise: ContextType;
 				}>();
-				const cur = context.timerImprecise?.count ?? 0;
 				context.timerImprecise = {
-					count: Number(cur) + 1,
+					randomNumber: Math.random(),
+					count: iteration,
 					elapsed,
 					cancelled: false,
 				};
-				if (context.timerImprecise.count === 5) {
-					context.timerImprecise.cancelled = true;
-					cancel();
-				}
 			},
 			1000,
 			{ useTimeout: true, precise: false },
 		);
+		setTimeout(clear2, 5001);
 	},
 });
+
+type ContextType = {
+	randomNumber: number;
+	count: number;
+	elapsed: number;
+	cancelled: boolean;
+};
